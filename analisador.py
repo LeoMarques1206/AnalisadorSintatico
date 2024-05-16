@@ -54,14 +54,16 @@ class AnalisadorSintatico:
             else:
                 print("Ocorreu um erro durante a compilação!")
         else:
+            avancos = 0
             while True:
                 if self.tokens[self.posicao].valor != 'END':
                     self.proximo_token()
+                    avancos += 1
                     if self.posicao >= len(self.tokens):
                         print("Erro! Esperado 'END' ao final das instruções")
                         break
                     if self.tokens[self.posicao].valor == "END":
-                        print("Compilação falhou! As instruções dadas estão incorretas! Programa parou em: '", token + " '")
+                        print("Compilação falhou! As instruções dadas estão incorretas! Programa parou em: '", self.tokens[self.posicao - (avancos + 1)].valor + " '")
                         break
                     
 
@@ -166,7 +168,7 @@ class AnalisadorSintatico:
                 print("Erro! Esperado '>' após expressão.")
         else:
             ocorreuErro = True
-            print("Erro! Fator inválido.")
+            print("Erro! Fator inválido. Algo faltando depois do comando:", self.tokens[self.posicao - 1].valor)
 
     def desvio(self):
         global ocorreuErro
@@ -451,7 +453,7 @@ tokensTesteGPT = [
     Token(";"),
     Token("IF"),
     Token("SUM"),
-    Token(">"),
+    #Token(">"),
     Token("100"),
     Token("THEN"),
     Token("PRINT"),
@@ -472,5 +474,5 @@ tokensTesteGPT = [
 ]
 
 
-analisador = AnalisadorSintatico(tokensTrabalho)
+analisador = AnalisadorSintatico(tokensTesteGPT)
 analisador.programa()
